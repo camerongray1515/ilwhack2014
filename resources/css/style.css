@@ -1,3 +1,20 @@
 .navbar {
 	margin-bottom: 0 !important;
 }
+
+.fixed_top_right {
+	position: absolute;
+	right: 5px;
+	z-index: 99;
+	
+	color: #000; /* Fallback for older browsers */
+    color: rgba(0, 0, 0, 0.3);
+}
+
+.top_right_menu {
+	float: right;
+}
+
+.top_right_menu li {
+	display: inline-block;
+}
