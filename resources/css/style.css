@@ -11,10 +11,13 @@
 	
 	color: #000; /* Fallback for older browsers */
     color: rgba(0, 0, 0, 0.3);
-    border-color: rgba(0, 0, 0, 0.1);
-    border-bottom: 2px solid;
-    border-left: 2px solid;
-    border-bottom-left-radius: 5px;
+    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-bottom-left-radius: 10px;
+    
+    -moz-box-shadow: 5px 5px 5px #888;
+    -webkit-box-shadow: 5px 5px 5px #888;
+    box-shadow: 5px 5px 5px #888;
 }
 
 .fixed_top_right_menu {
@@ -32,4 +35,13 @@
 
 .top_right_menu li {
 	display: inline-block;
+}
+
+.menu_fixed {
+	color: #000; /* Fallback for older browsers */
+    color: rgba(0, 0, 0, 0.3);
+}
+
+.menu_fixed:hover {
+	text-decoration: none;
 }
