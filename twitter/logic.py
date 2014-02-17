@@ -8,9 +8,9 @@ class TwitterAPI():
 
     def getTweets(self):
         "Retrieves all tweets for the Edinburgh area"
-        return self.api.search(geocode = "55.9507217407,-3.1923000813,20km", rpp = "1000")
+        return self.api.search(geocode = "55.9507217407,-3.1923000813,20km", rpp = "10000")
 
-    def tweetsLoop(self, tweets):
+    def tweetsToArray(self, tweets):
         "Converts tweepy objects into readable data"
         tweet_dic = [] 
 
@@ -21,3 +21,7 @@ class TwitterAPI():
                 pass
 
         return tweet_dic
+
+    def get_tweets_array(self):
+        tweets = self.getTweets()
+        return self.tweetsToArray(tweets)
