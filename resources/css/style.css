@@ -2,7 +2,22 @@
 	margin-bottom: 0 !important;
 }
 
-.fixed_top_right {
+.fixed_top_right_brand {
+	position: absolute;
+	right: 0px;
+	padding-right: 5px;
+	padding-left: 5px;
+	z-index: 99;
+	
+	color: #000; /* Fallback for older browsers */
+    color: rgba(0, 0, 0, 0.3);
+    border-color: rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid;
+    border-left: 2px solid;
+    border-bottom-left-radius: 5px;
+}
+
+.fixed_top_right_menu {
 	position: absolute;
 	right: 5px;
 	z-index: 99;
