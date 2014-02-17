@@ -15,6 +15,9 @@ class TwitterAPI():
         tweet_dic = [] 
 
         for t in tweets:
-                tweet_dic.append({'user': t.user.screen_name})
+            if (t.coordinates != None):
+                tweet_dic.append({'user': t.user.screen_name, 'text': t.text, 'timestamp': t.created_at, 'coordinates': t.coordinates})
+            else:
+                pass
 
         return tweet_dic
