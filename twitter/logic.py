@@ -1,0 +1,20 @@
+from tweepy import *
+
+class TwitterAPI():
+
+    def __init__ (self):
+        self.auth = OAuthHandler("To98JTvaCHrH1g2R4JtOg","D8sYsHmdvybnxCFNjJ32g0epoiIJmhLzwetkUUW0")
+        self.api = API(self.auth)
+
+    def getTweets(self):
+        "Retrieves all tweets for the Edinburgh area"
+        return self.api.search(geocode = "55.9507217407,-3.1923000813,20km", rpp = "1000")
+
+    def tweetsLoop(self, tweets):
+        "Converts tweepy objects into readable data"
+        tweet_dic = [] 
+
+        for t in tweets:
+                tweet_dic.append({'user': t.user.screen_name})
+
+        return tweet_dic
