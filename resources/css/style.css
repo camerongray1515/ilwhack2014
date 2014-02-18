@@ -20,6 +20,14 @@
     box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 }
 
+.fixed_top_right_brand:hover {
+	background-color: rgba(255, 255, 255, 1);
+	transition: background-color .8s ease-out;
+	-moz-transition: background-color .5s ease-out;
+	-webkit-transition: background-color .5s ease-out;
+	-o-transition: background-color .5s ease-out;
+}
+
 .fixed_top_right_brand h1{
 	font-family: ‘Exo 2’, Helvetica, sans-serif; font-weight: 100;
 	margin-top: 5px !important;
@@ -55,11 +63,29 @@
 }
 
 div.leaflet-top.leaflet-right {
-	margin-top: 90px;
+	margin-top: 95px;
 	margin-right: 5px !important;
+}
+
+div.leaflet-top.leaflet-right:hover {
+	background-color: rgba(255, 255, 255, 1) !important;
+	border-radius: 4px;
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 }
 
 div.leaflet-control-layers.leaflet-control, .leaflet-control-zoom-in, .leaflet-control-zoom-out {
 	margin: 0 !important;
 	background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+div.leaflet-control-layers:hover,.leaflet-control:hover, .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover {
+	background-color: rgba(255, 255, 255, 1) !important;
+	transition: background-color .8s ease-out;
+	-moz-transition: background-color .5s ease-out;
+	-webkit-transition: background-color .5s ease-out;
+	-o-transition: background-color .5s ease-out;
+}
+
+.logo_branding {
+	opacity:0.8;
 }
