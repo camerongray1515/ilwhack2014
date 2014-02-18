@@ -53,3 +53,13 @@
 	display: inline-block;
 	font-family: ‘Exo 2’, Helvetica, sans-serif; font-weight: 400;
 }
+
+div.leaflet-top.leaflet-right {
+	margin-top: 90px;
+	margin-right: 5px !important;
+}
+
+div.leaflet-control-layers.leaflet-control, .leaflet-control-zoom-in, .leaflet-control-zoom-out {
+	margin: 0 !important;
+	background-color: rgba(255, 255, 255, 0.8) !important;
+}
