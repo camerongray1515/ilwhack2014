@@ -4,29 +4,45 @@
 
 .fixed_top_right_brand {
 	position: absolute;
+	top: 5px;
 	right: 0px;
-	padding-right: 5px;
-	padding-left: 5px;
-	z-index: 99;
+	margin-right: 5px;
+	padding-right: 15px;
+	padding-left: 15px;
+	z-index: 50;
 	
 	color: #000; /* Fallback for older browsers */
-    color: rgba(0, 0, 0, 0.3);
+    color: rgba(0, 0, 0, 0.7);
     background-color: #fff;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-bottom-left-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
     
-    -moz-box-shadow: 5px 5px 5px #888;
-    -webkit-box-shadow: 5px 5px 5px #888;
-    box-shadow: 5px 5px 5px #888;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+}
+
+.fixed_top_right_brand h1{
+	font-family: ‘Exo 2’, Helvetica, sans-serif; font-weight: 100;
+	margin-top: 5px !important;
+	margin-bottom: 5px !important;
 }
 
 .fixed_top_right_menu {
 	position: absolute;
-	right: 5px;
+	top: 90px;
+	right: 0px;
+	margin-right: 5px;
 	z-index: 99;
 	
 	color: #000; /* Fallback for older browsers */
-    color: rgba(0, 0, 0, 0.3);
+    color: rgba(0, 0, 0, 0.8);
+    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.8);
+    
+    border-radius: 4px;
+    
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    
+    padding: 10px;
 }
 
 .top_right_menu {
@@ -35,13 +51,5 @@
 
 .top_right_menu li {
 	display: inline-block;
-}
-
-.menu_fixed {
-	color: #000; /* Fallback for older browsers */
-    color: rgba(0, 0, 0, 0.3);
-}
-
-.menu_fixed:hover {
-	text-decoration: none;
+	font-family: ‘Exo 2’, Helvetica, sans-serif; font-weight: 400;
 }
