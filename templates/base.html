@@ -42,13 +42,34 @@
     
     <div id="map"></div>
 	<script>
+
+        //Custom marker icons common settings
+        var tweetMarker = L.Icon.extend({
+        options: {
+        shadowUrl: 'mshadow.png',
+        iconSize:     [35, 50],
+        shadowSize:   [45, 50],
+        iconAnchor:   [17, 50],
+        shadowAnchor: [10, 50],
+        popupAnchor:  [-1, -45]
+        }
+        });
+
+        //Custom marker icons individual images
+        var ms5 = new tweetMarker({iconUrl: 'ms5.png'}),
+            ms4 = new tweetMarker({iconUrl: 'ms4.png'}),
+            ms3 = new tweetMarker({iconUrl: 'ms3.png'}),
+            ms2 = new tweetMarker({iconUrl: 'ms2.png'}),
+            ms1 = new tweetMarker({iconUrl: 'ms1.png'});
 		
 		var buildings = new L.layerGroup();
 		
 		L.marker([55.9444, -3.1872]).bindPopup('Appleton Tower').addTo(buildings);
 		L.marker([55.9447, -3.1874]).bindPopup('Informatics Forum').addTo(buildings);
 
-		var test = new L.layerGroup();
+		var tweets = new L.layerGroup();
+
+        L.marker([55.94, -3.18], {icon: ms5}).bindPopup('Test tweet').addTo(tweets);        
 		
 		var cmAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 			cmUrl = 'http://{s}.tile.cloudmade.com/77ff4841d6f0491bab827407e8100358/{styleId}/256/{z}/{x}/{y}.png';
@@ -58,14 +79,15 @@
 		var map = L.map('map', { 
 				center: [55.9444, -3.1872],
 				zoom: 10,
-				layers: [minimal, buildings]
+				layers: [minimal, buildings, tweets]
 		});		
 		
 		var baseLayers = {
 		};
 		
 		var overlays = {
-			"Buildings": buildings
+			"Buildings": buildings,
+            "Tweets": tweets
 		};
 		
 		L.control.layers(baseLayers, overlays).setPosition("topright").addTo(map);
