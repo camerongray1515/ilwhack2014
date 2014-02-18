@@ -46,7 +46,7 @@
         //Custom marker icons common settings
         var tweetMarker = L.Icon.extend({
         options: {
-        shadowUrl: 'mshadow.png',
+        shadowUrl: '../resources/img/mshadow.png',
         iconSize:     [35, 50],
         shadowSize:   [45, 50],
         iconAnchor:   [17, 50],
@@ -56,11 +56,11 @@
         });
 
         //Custom marker icons individual images
-        var ms5 = new tweetMarker({iconUrl: 'ms5.png'}),
-            ms4 = new tweetMarker({iconUrl: 'ms4.png'}),
-            ms3 = new tweetMarker({iconUrl: 'ms3.png'}),
-            ms2 = new tweetMarker({iconUrl: 'ms2.png'}),
-            ms1 = new tweetMarker({iconUrl: 'ms1.png'});
+        var ms5 = new tweetMarker({iconUrl: '../resources/img/ms5.png'}),
+            ms4 = new tweetMarker({iconUrl: '../resources/img/ms4.png'}),
+            ms3 = new tweetMarker({iconUrl: '../resources/img/ms3.png'}),
+            ms2 = new tweetMarker({iconUrl: '../resources/img/ms2.png'}),
+            ms1 = new tweetMarker({iconUrl: '../resources/img/ms1.png'});
 		
 		var buildings = new L.layerGroup();
 		
