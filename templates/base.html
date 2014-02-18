@@ -16,7 +16,7 @@
 	</style>
 
 
-    <title>ILWHack 2014 - {% block title %}INF-YT{% endblock %}</title>
+    <title>LocEmotion</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../resources/css/bootstrap.min.css" rel="stylesheet">
@@ -30,7 +30,7 @@
 
   <body>
   	<span class="fixed_top_right_brand">
-    	<h1>LocEmotion</h1>
+    	<h1><a class="brand" href="#"><img class="logo_branding" src = "../resources/img/logo.png"></a></h1>
     	<ul class="top_right_menu">
     		<li><a href="#home" class="menu_fixed">Home</a></li>
     		<li>|</li>
@@ -42,13 +42,34 @@
     
     <div id="map"></div>
 	<script>
+
+        //Custom marker icons common settings
+        var tweetMarker = L.Icon.extend({
+        options: {
+        shadowUrl: '../resources/img/mshadow.png',
+        iconSize:     [35, 50],
+        shadowSize:   [45, 50],
+        iconAnchor:   [17, 50],
+        shadowAnchor: [10, 50],
+        popupAnchor:  [-1, -45]
+        }
+        });
+
+        //Custom marker icons individual images
+        var ms5 = new tweetMarker({iconUrl: '../resources/img/ms5.png'}),
+            ms4 = new tweetMarker({iconUrl: '../resources/img/ms4.png'}),
+            ms3 = new tweetMarker({iconUrl: '../resources/img/ms3.png'}),
+            ms2 = new tweetMarker({iconUrl: '../resources/img/ms2.png'}),
+            ms1 = new tweetMarker({iconUrl: '../resources/img/ms1.png'});
 		
 		var buildings = new L.layerGroup();
 		
 		L.marker([55.9444, -3.1872]).bindPopup('Appleton Tower').addTo(buildings);
 		L.marker([55.9447, -3.1874]).bindPopup('Informatics Forum').addTo(buildings);
 
-		var test = new L.layerGroup();
+		var tweets = new L.layerGroup();
+
+        L.marker([55.94, -3.18], {icon: ms5}).bindPopup('Test tweet').addTo(tweets);        
 		
 		var cmAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 			cmUrl = 'http://{s}.tile.cloudmade.com/77ff4841d6f0491bab827407e8100358/{styleId}/256/{z}/{x}/{y}.png';
@@ -57,15 +78,16 @@
 				
 		var map = L.map('map', { 
 				center: [55.9444, -3.1872],
-				zoom: 10,
-				layers: [minimal, buildings]
+				zoom: 12,
+				layers: [minimal, buildings, tweets]
 		});		
 		
 		var baseLayers = {
 		};
 		
 		var overlays = {
-			"Buildings": buildings
+			"Buildings": buildings,
+            "Tweets": tweets
 		};
 		
 		L.control.layers(baseLayers, overlays).setPosition("topright").addTo(map);
