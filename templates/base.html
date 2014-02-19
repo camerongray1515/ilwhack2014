@@ -90,7 +90,7 @@
 		
         L.geoJson(ukData, {onEachFeature: onEachFeature,
         style: function(feature) {
-        if (feature.properties.DZ_CODE =='S01002101'){
+        if (feature.properties.DZ_CODE =='S01004196' || feature.properties.DZ_CODE =='S01004197' || feature.properties.DZ_CODE =='S01004201' || feature.properties.DZ_CODE =='S01004202' || feature.properties.DZ_CODE =='S01004203' || feature.properties.DZ_CODE =='S01004208' || feature.properties.DZ_CODE =='S01004210' || feature.properties.DZ_CODE =='S01004193'){
          return {color: "#ff0000", weight: 2};}
             else {return {color: "#00ff00", weight: 2};}
                     }
