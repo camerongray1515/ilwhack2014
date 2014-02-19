@@ -28,7 +28,7 @@
 
   </head>
 
-  <body>
+  <body> 
     <div id="map">
     	<span class="fixed_top_right_brand">
 	    	<h1><a class="brand" href="#"><img class="logo_branding" width="199px" src = "../resources/img/logo.png"></a></h1>
@@ -87,7 +87,7 @@
 
         //geoJSON drawing with conditional colouring
 		var geoJsonUk = new L.layerGroup();
-		
+
         L.geoJson(ukData, {onEachFeature: onEachFeature,
         style: function(feature) {
         if (feature.properties.DZ_CODE =='S01004196' || feature.properties.DZ_CODE =='S01004197' || feature.properties.DZ_CODE =='S01004201' || feature.properties.DZ_CODE =='S01004202' || feature.properties.DZ_CODE =='S01004203' || feature.properties.DZ_CODE =='S01004208' || feature.properties.DZ_CODE =='S01004210' || feature.properties.DZ_CODE =='S01004193'){
@@ -118,7 +118,7 @@
 		var map = L.map('map', { 
 				center: [55.9444, -3.1872],
 				zoom: 12,
-				layers: [minimal, buildings, tweets, geoJsonUk]
+				layers: [minimal, buildings, tweets]
 		});		
 		
 		var baseLayers = {
@@ -131,8 +131,6 @@
 		};
 		
 		L.control.layers(baseLayers, overlays).setPosition("topright").addTo(map);
-
-		
 
 	</script>
 
