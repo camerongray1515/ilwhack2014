@@ -28,20 +28,20 @@
 
   </head>
 
-  <body>
-  	<span class="fixed_top_right_brand">
-    	<h1><a class="brand" href="#"><img class="logo_branding" width="199px" src = "../resources/img/logo.png"></a></h1>
-    	<ul class="top_right_menu">
-    		<li><a href="#home" class="menu_fixed">Home</a></li>
-    		<li>|</li>
-    		<li><a href="#about" class="menu_fixed">About</a></li>
-    		<li>|</li>
-    		<li><a href="#stats" class="menu_fixed">Stats</a></li>
-    	</ul>
-    </span>
-    
-    <div id="map"></div>
-    <script type="text/javascript" src="../resources/js/datazones.js"></script>
+  <body> 
+    <div id="map">
+    	<span class="fixed_top_right_brand">
+	    	<h1><a class="brand" href="#"><img class="logo_branding" width="199px" src = "../resources/img/logo.png"></a></h1>
+	    	<ul class="top_right_menu">
+	    		<li><a href="#home" class="menu_fixed">Home</a></li>
+	    		<li>|</li>
+	    		<li><a href="#about" class="menu_fixed">About</a></li>
+	    		<li>|</li>
+	    		<li><a href="#stats" class="menu_fixed">Stats</a></li>
+	    	</ul>
+	    </span>
+	</div>
+    <script type="text/javascript" src="../resources/js/DataZonesMin.js"></script>
 	<script>
 
         //Custom marker icons common settings
@@ -63,19 +63,57 @@
             ms2 = new tweetMarker({iconUrl: '../resources/img/ms2.png'}),
             ms1 = new tweetMarker({iconUrl: '../resources/img/ms1.png'});
 		
-		var buildings = new L.layerGroup();
 		
+        //Buildings layer group
+        var buildings = new L.layerGroup();		
 		L.marker([55.9444, -3.1872]).bindPopup('Appleton Tower').addTo(buildings);
 		L.marker([55.9447, -3.1874]).bindPopup('Informatics Forum').addTo(buildings);
 
+        //Tweets layer group
 		var tweets = new L.layerGroup();
-
         L.marker([55.94, -3.18], {icon: ms5}).bindPopup('Test tweet').addTo(tweets);        
 		
 		var cmAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 			cmUrl = 'http://{s}.tile.cloudmade.com/77ff4841d6f0491bab827407e8100358/{styleId}/256/{z}/{x}/{y}.png';
 			
 		var minimal   = L.tileLayer(cmUrl, {styleId: 997, attribution: cmAttr});
+		
+		function onEachFeature(feature, layer) {
+			// does this feature have a property named popupContent?
+			if (feature.properties && feature.properties.DZ_CODE) {
+				layer.bindPopup(feature.properties.DZ_CODE);
+			}
+}
+
+        //geoJSON drawing with conditional colouring
+		var geoJsonUk = new L.layerGroup();
+
+        L.geoJson(ukData, {onEachFeature: onEachFeature,
+        style: function(feature) {
+        if (feature.properties.DZ_CODE =='S01004196' || feature.properties.DZ_CODE =='S01004197' || feature.properties.DZ_CODE =='S01004201' || feature.properties.DZ_CODE =='S01004202' || feature.properties.DZ_CODE =='S01004203' || feature.properties.DZ_CODE =='S01004208' || feature.properties.DZ_CODE =='S01004210' || feature.properties.DZ_CODE =='S01004193'){
+         return {color: "#ff0000", weight: 2};}
+            else {return {color: "#00ff00", weight: 2};}
+                    }
+                }).addTo(geoJsonUk);
+
+        //CONDITIONAL FORMATTING BASED ON SIMD SCORE
+
+        //L.geoJson(ukData, {onEachFeature: onEachFeature,
+        //style: function(feature) {
+        //if (feature.properties.SIMD >= 4800){
+        // return {color: "#00ff00", weight: 2};}
+        //else if (feature.properties.SIMD >= 3600 && feature.properties.SIMD < 4800){
+        // return {color: "#7fff00", weight: 2};}
+        //else if (feature.properties.SIMD >= 2400 && feature.properties.SIMD < 3600){
+        // return {color: "#ffff00", weight: 2};}
+        //else if (feature.properties.SIMD >= 1200 && feature.properties.SIMD < 2400){
+        // return {color: "#ff7f00", weight: 2};}
+        //else if (feature.properties.SIMD < 1200){
+        // return {color: "#ff0000", weight: 2};}
+        //    else {return {color: "#ffff00", weight: 2};}
+        //            }
+        //        }).addTo(geoJsonUk);
+        //}
 				
 		var map = L.map('map', { 
 				center: [55.9444, -3.1872],
@@ -88,121 +126,11 @@
 		
 		var overlays = {
 			"Buildings": buildings,
-            "Tweets": tweets
+            "Tweets": tweets,
+            "info" : geoJsonUk
 		};
 		
 		L.control.layers(baseLayers, overlays).setPosition("topright").addTo(map);
-		
-
-		// control that shows state info on hover
-		var info = L.control();
-
-		info.onAdd = function (map) {
-			this._div = L.DomUtil.create('div', 'info');
-			this.update();
-			return this._div;
-		};
-
-		info.update = function (props) {
-			this._div.innerHTML = '<h4>US Population Density</h4>' +  (props ?
-				'<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
-				: 'Hover over a state');
-		};
-
-		info.addTo(map);
-
-
-		// get color depending on population density value
-		function getColor(d) {
-			/*return d > 1000 ? '#800026' :
-			       d > 500  ? '#BD0026' :
-			       d > 200  ? '#E31A1C' :
-			       d > 100  ? '#FC4E2A' :
-			       d > 50   ? '#FD8D3C' :
-			       d > 20   ? '#FEB24C' :
-			       d > 10   ? '#FED976' :
-			                  '#FFEDA0';*/
-			return "#FF0000";
-		}
-
-		function style(feature) {
-			return {
-				weight: 2,
-				opacity: 1,
-				color: 'white',
-				dashArray: '3',
-				fillOpacity: 0.7,
-				fillColor: getColor(feature.properties.density)
-			};
-		}
-
-		function highlightFeature(e) {
-			var layer = e.target;
-
-			layer.setStyle({
-				weight: 5,
-				color: '#666',
-				dashArray: '',
-				fillOpacity: 0.7
-			});
-
-			if (!L.Browser.ie && !L.Browser.opera) {
-				layer.bringToFront();
-			}
-
-			info.update(layer.feature.properties);
-		}
-
-		var geojsonuk;
-
-		function resetHighlight(e) {
-			geojson.resetStyle(e.target);
-			info.update();
-		}
-
-		function zoomToFeature(e) {
-			map.fitBounds(e.target.getBounds());
-		}
-
-		function onEachFeature(feature, layer) {
-			layer.on({
-				mouseover: highlightFeature,
-				mouseout: resetHighlight,
-				click: zoomToFeature
-			});
-		}
-
-        var myStyle = {
-        "color": "#ff7800",
-        "weight": 3,
-        "opacity": 0.3
-        };
-		
-		geojsonuk = L.geoJson(ukData, {style: myStyle}).addTo(map);
-
-		var legend = L.control({position: 'bottomright'});
-
-		legend.onAdd = function (map) {
-
-			var div = L.DomUtil.create('div', 'info legend'),
-				grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-				labels = [],
-				from, to;
-
-			for (var i = 0; i < grades.length; i++) {
-				from = grades[i];
-				to = grades[i + 1];
-
-				labels.push(
-					'<i style="background:' + getColor(from + 1) + '"></i> ' +
-					from + (to ? '&ndash;' + to : '+'));
-			}
-
-			div.innerHTML = labels.join('<br>');
-			return div;
-		};
-
-		L.geoJson(ukData).addTo(map);
 
 	</script>
 
