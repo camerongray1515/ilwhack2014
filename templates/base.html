@@ -25,9 +25,9 @@
     <!-- Leaflet JS init-->
     <link href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" rel="stylesheet">
     <script src="http://leafletjs.com/dist/leaflet.js"></script>
+    <script src="../resources/js/Control.Loading.js"></script>
 
   </head>
-
   <body> 
     <div id="map">
     	<span class="fixed_top_right_brand">
@@ -80,8 +80,8 @@
 		
 		function onEachFeature(feature, layer) {
 			// does this feature have a property named popupContent?
-			if (feature.properties && feature.properties.DZ_CODE) {
-				layer.bindPopup(feature.properties.DZ_CODE);
+			if (feature.properties && feature.properties.DZ_CODE && feature.properties.DZ_NAME) {
+				layer.bindPopup("<b>Name: </b>" + feature.properties.DZ_CODE + "<br /><b>Code: </b>" + feature.properties.DZ_NAME);
 			}
 }
 
@@ -118,7 +118,8 @@
 		var map = L.map('map', { 
 				center: [55.9444, -3.1872],
 				zoom: 12,
-				layers: [minimal, buildings, tweets]
+				layers: [minimal, buildings, tweets],
+                loadingControl: true
 		});		
 		
 		var baseLayers = {
