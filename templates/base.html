@@ -83,9 +83,14 @@
 				layer.bindPopup(feature.properties.DZ_CODE);
 			}
 }
-		
+		var geoStyle = {
+        "color": "#ff7800",
+        "weight": 2.5,
+        "opacity": 0.25
+        };
+
 		var geoJsonUk = new L.layerGroup();
-		L.geoJson(ukData, {onEachFeature: onEachFeature}).addTo(geoJsonUk);
+		L.geoJson(ukData, {onEachFeature: onEachFeature, style: geoStyle}).addTo(geoJsonUk);
 				
 		var map = L.map('map', { 
 				center: [55.9444, -3.1872],
