@@ -41,7 +41,7 @@
     </span>
     
     <div id="map"></div>
-    <script type="text/javascript" src="../resources/js/uk-states.js"></script>
+    <script type="text/javascript" src="../resources/js/datazones.js"></script>
 	<script>
 
         //Custom marker icons common settings
@@ -171,8 +171,14 @@
 				click: zoomToFeature
 			});
 		}
+
+        var myStyle = {
+        "color": "#ff7800",
+        "weight": 3,
+        "opacity": 0.3
+        };
 		
-		geojsonuk = L.geoJson(ukData).addTo(map);
+		geojsonuk = L.geoJson(ukData, {style: myStyle}).addTo(map);
 
 		var legend = L.control({position: 'bottomright'});
 
