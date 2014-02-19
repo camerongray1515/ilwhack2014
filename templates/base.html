@@ -63,13 +63,14 @@
             ms2 = new tweetMarker({iconUrl: '../resources/img/ms2.png'}),
             ms1 = new tweetMarker({iconUrl: '../resources/img/ms1.png'});
 		
-		var buildings = new L.layerGroup();
 		
+        //Buildings layer group
+        var buildings = new L.layerGroup();		
 		L.marker([55.9444, -3.1872]).bindPopup('Appleton Tower').addTo(buildings);
 		L.marker([55.9447, -3.1874]).bindPopup('Informatics Forum').addTo(buildings);
 
+        //Tweets layer group
 		var tweets = new L.layerGroup();
-
         L.marker([55.94, -3.18], {icon: ms5}).bindPopup('Test tweet').addTo(tweets);        
 		
 		var cmAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
@@ -83,14 +84,36 @@
 				layer.bindPopup(feature.properties.DZ_CODE);
 			}
 }
-		var geoStyle = {
-        "color": "#ff7800",
-        "weight": 2.5,
-        "opacity": 0.25
-        };
 
+        //geoJSON drawing with conditional colouring
 		var geoJsonUk = new L.layerGroup();
-		L.geoJson(ukData, {onEachFeature: onEachFeature, style: geoStyle}).addTo(geoJsonUk);
+		
+        L.geoJson(ukData, {onEachFeature: onEachFeature,
+        style: function(feature) {
+        if (feature.properties.DZ_CODE =='S01002101'){
+         return {color: "#ff0000", weight: 2};}
+            else {return {color: "#00ff00", weight: 2};}
+                    }
+                }).addTo(geoJsonUk);
+
+        //CONDITIONAL FORMATTING BASED ON SIMD SCORE
+
+        //L.geoJson(ukData, {onEachFeature: onEachFeature,
+        //style: function(feature) {
+        //if (feature.properties.SIMD >= 4800){
+        // return {color: "#00ff00", weight: 2};}
+        //else if (feature.properties.SIMD >= 3600 && feature.properties.SIMD < 4800){
+        // return {color: "#7fff00", weight: 2};}
+        //else if (feature.properties.SIMD >= 2400 && feature.properties.SIMD < 3600){
+        // return {color: "#ffff00", weight: 2};}
+        //else if (feature.properties.SIMD >= 1200 && feature.properties.SIMD < 2400){
+        // return {color: "#ff7f00", weight: 2};}
+        //else if (feature.properties.SIMD < 1200){
+        // return {color: "#ff0000", weight: 2};}
+        //    else {return {color: "#ffff00", weight: 2};}
+        //            }
+        //        }).addTo(geoJsonUk);
+        //}
 				
 		var map = L.map('map', { 
 				center: [55.9444, -3.1872],
