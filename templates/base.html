@@ -41,7 +41,7 @@
     </span>
     
     <div id="map"></div>
-    <script type="text/javascript" src="../resources/js/us-states.js"></script>
+    <script type="text/javascript" src="../resources/js/uk-states.js"></script>
 	<script>
 
         //Custom marker icons common settings
@@ -80,12 +80,18 @@
 		var map = L.map('map', { 
 				center: [55.9444, -3.1872],
 				zoom: 12,
-				layers: [minimal, buildings, tweets, poly]
+				layers: [minimal, buildings, tweets]
 		});		
 		
 		var baseLayers = {
 		};
 		
+		var overlays = {
+			"Buildings": buildings,
+            "Tweets": tweets
+		};
+		
+		L.control.layers(baseLayers, overlays).setPosition("topright").addTo(map);
 		
 
 		// control that shows state info on hover
@@ -104,20 +110,19 @@
 		};
 
 		info.addTo(map);
-		
-		
 
 
 		// get color depending on population density value
 		function getColor(d) {
-			return d > 1000 ? '#800026' :
+			/*return d > 1000 ? '#800026' :
 			       d > 500  ? '#BD0026' :
 			       d > 200  ? '#E31A1C' :
 			       d > 100  ? '#FC4E2A' :
 			       d > 50   ? '#FD8D3C' :
 			       d > 20   ? '#FEB24C' :
 			       d > 10   ? '#FED976' :
-			                  '#FFEDA0';
+			                  '#FFEDA0';*/
+			return "#FF0000";
 		}
 
 		function style(feature) {
@@ -148,8 +153,7 @@
 			info.update(layer.feature.properties);
 		}
 
-		var poly = new L.geoJson();
-		var geojson;
+		var geojsonuk;
 
 		function resetHighlight(e) {
 			geojson.resetStyle(e.target);
@@ -167,11 +171,8 @@
 				click: zoomToFeature
 			});
 		}
-
-		geojson = L.geoJson(statesData, {
-			style: style,
-			onEachFeature: onEachFeature
-		}).addTo(poly);
+		
+		geojsonuk = L.geoJson(ukData).addTo(map);
 
 		var legend = L.control({position: 'bottomright'});
 
@@ -196,14 +197,6 @@
 		};
 
 		legend.addTo(map);
-		
-		var overlays = {
-			"Buildings": buildings,
-            "Tweets": tweets,
-            "json": poly
-		};	
-		
-		L.control.layers(baseLayers, overlays).setPosition("topright").addTo(map);
 
 	</script>
 
