@@ -21,7 +21,7 @@ def get_tweet_meta(request):
                 'happiness': x.polarity
             },
             'geometry': {
-                'type': 'point',
+                'type': 'Point',
                 'coordinates': [x.tweet.longitude, x.tweet.latitude]
             }
         }

@@ -43,14 +43,36 @@
 
         //Buildings layer group
         var buildings = new L.layerGroup();
-		L.marker([55.9444, -3.1872]).bindPopup('Appleton Tower').addTo(buildings);
-		L.marker([55.9447, -3.1874]).bindPopup('Informatics Forum').addTo(buildings);
-
-        //Tweets layer group
 		var tweets = new L.layerGroup();
-		var tweetJson = $.getJSON("http://127.0.0.1:8000/data/get_tweet_meta/");
-		L.geoJson(tweetJson).addTo(tweets);
-        L.marker([55.94, -3.18], {icon: ms5}).bindPopup('Test tweet').addTo(tweets);
+		
+		function iconColour(d) {
+			if (d <= 1 && d > 0.6){
+				return ms5;
+			}
+			if (d <= 0.6 && d > 0.2){
+				return ms4;
+			}
+			if (d <= 0.2 && d > -0.2){
+				return ms3;
+			}
+			if (d <= -0.2 && d > -0.6){
+				return ms2;
+			}
+			if (d <= -0.6 && d >= -1){
+				return ms1;
+			}
+		}
+        
+        //Tweets layer group			
+		$.get('/data/get_tweet_meta/', function(data) {
+			var tweet_data = data;
+			L.geoJson(tweet_data, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng, {icon: iconColour(feature.properties.happiness)});
+				}
+			}).addTo(tweets);
+		});
+			
 
 		var cmAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 			cmUrl = 'http://{s}.tile.cloudmade.com/77ff4841d6f0491bab827407e8100358/{styleId}/256/{z}/{x}/{y}.png';
@@ -66,15 +88,7 @@
 			if (feature.properties && feature.properties.DZ_CODE) {
 				layer.bindPopup("<b>Name:	</b>" + feature.properties.DZ_NAME + "<br /><b>Code:	</b>" + feature.properties.DZ_CODE);
 			}
-}
-				/*
-		function onEachFeatureTweet(feature, layer) {
-					// does this feature have a property named popupContent?
-					if (feature.properties && feature.properties.tweet_user) {
-						layer.bindPopup("<b>Username:	</b>" + feature.properties.tweet_name + "<br /><b>Tweet:	</b>" + feature.properties.tweet_content);
-					}
 		}
-*/
 
         //geoJSON drawing with conditional colouring
 		var geoJsonUk = new L.layerGroup();
@@ -86,27 +100,6 @@
             else {return {color: 'white', dashArray: '3', fillOpacity: 0.25, fillColor:  "#00ff00", weight: 2};}
                     }
                 }).addTo(geoJsonUk);
-
-
-	        /*
-L.geoJson(geoJsonTweets, {oneachfeature: onEachFeatureTweet(feature, layer), icon : function(feature) 			{
-		        if (feature.properties.happiness >= -1 && feature.properties.happiness < -0.6 ) {
-			        return {icon: ms1};
-		        }
-		        if (feature.properties.happiness >= -0.6 && feature.properties.happiness < -0.2 ) {
-			        return {icon: ms2};
-		        }
-		        if (feature.properties.happiness >= -0.2 && feature.properties.happiness < -0.2 ) {
-			        return {icon: ms3};
-		        }
-		        if (feature.properties.happiness >= 0.2 && feature.properties.happiness < 0.6 ) {
-			        return {icon: ms4};
-		        }
-		        if (feature.properties.happiness >= 0.6 && feature.properties.happiness <= 1 ) {
-			        return {icon: ms5};
-		        }
-		       }}).addTo(tweets);
-*/
 
 
         //CONDITIONAL FORMATTING BASED ON SIMD SCORE
@@ -165,7 +158,7 @@ L.geoJson(geoJsonTweets, {oneachfeature: onEachFeatureTweet(feature, layer), ico
 		var map = L.map('map', {
 				center: [55.9444, -3.1872],
 				zoom: 12,
-				layers: [minimal, buildings, tweets],
+				layers: [minimal, buildings],
                 loadingControl: true
 		});
 
