@@ -42,6 +42,7 @@
 	    </span>
 	</div>
     <script type="text/javascript" src="../resources/js/filtered.js"></script>
+
 	<script>
 
         //Custom marker icons common settings
@@ -63,6 +64,7 @@
             ms2 = new tweetMarker({iconUrl: '../resources/img/ms2.png'}),
             ms1 = new tweetMarker({iconUrl: '../resources/img/ms1.png'});
 		
+        //function to choose icon based on sentiment score
 		
         //Buildings layer group
         var buildings = new L.layerGroup();		
@@ -80,8 +82,8 @@
 		
 		function onEachFeature(feature, layer) {
 			// does this feature have a property named popupContent?
-			if (feature.properties && feature.properties.DZ_CODE && feature.properties.DZ_NAME) {
-				layer.bindPopup("<b>Name: </b>" + feature.properties.DZ_CODE + "<br /><b>Code: </b>" + feature.properties.DZ_NAME);
+			if (feature.properties && feature.properties.DZ_CODE) {
+				layer.bindPopup("<b>Name:	</b>" + feature.properties.DZ_NAME + "<br /><b>Code:	</b>" + feature.properties.DZ_CODE);
 			}
 }
 
@@ -91,8 +93,8 @@
         L.geoJson(ukData, {onEachFeature: onEachFeature,
         style: function(feature) {
         if (feature.properties.DZ_CODE =='S01004196' || feature.properties.DZ_CODE =='S01004197' || feature.properties.DZ_CODE =='S01004201' || feature.properties.DZ_CODE =='S01004202' || feature.properties.DZ_CODE =='S01004203' || feature.properties.DZ_CODE =='S01004208' || feature.properties.DZ_CODE =='S01004210' || feature.properties.DZ_CODE =='S01004193'){
-         return {color: "#ff0000", weight: 2};}
-            else {return {color: "#00ff00", weight: 2};}
+         return {color: 'white', dashArray: '3', fillOpacity: 0.7, fillColor: "#ff0000", weight: 2};}
+            else {return {color: 'white', dashArray: '3', fillOpacity: 0.7, fillColor:  "#00ff00", weight: 2};}
                     }
                 }).addTo(geoJsonUk);
 
