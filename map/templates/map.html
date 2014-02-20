@@ -48,6 +48,8 @@
 
         //Tweets layer group
 		var tweets = new L.layerGroup();
+		var tweetJson = $.getJSON("http://127.0.0.1:8000/data/get_tweet_meta/");
+		L.geoJson(tweetJson).addTo(tweets);
         L.marker([55.94, -3.18], {icon: ms5}).bindPopup('Test tweet').addTo(tweets);
 
 		var cmAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
