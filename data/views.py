@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from data.models import *
 
+
 def get_tweet_meta(request):
     # Todo: Add tweet limit
     raw_data = HappinessScore.objects.all()
@@ -28,3 +29,16 @@ def get_tweet_meta(request):
         geo_json_tweets['features'].append(geo_json_tweet)
 
     return HttpResponse(json.dumps(geo_json_tweets, use_decimal=True), mimetype='application/json')
+
+
+def get_tweet(request, tweet_id):
+    tweet = Tweet.objects.get(id=tweet_id)
+
+    tweet_dict = {
+        'id': tweet.id,
+        'user': tweet.sender,
+        'body': tweet.body,
+        'timestamp': tweet.timestamp.strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+    return HttpResponse(json.dumps(tweet_dict), mimetype='application/json')
