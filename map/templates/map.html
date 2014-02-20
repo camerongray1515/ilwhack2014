@@ -62,6 +62,18 @@
 				return ms1;
 			}
 		}
+		
+		function getText(id, layer) {
+			$.get('/data/get_tweet_meta/' + id, function(stuff) {
+				console.log(stuff);
+        		layer.bindPopup(stuff.properties.user);
+        	})
+		}
+		function onEachTweet(feature, layer) {
+			layer.on ({
+				click: getText(feature.properties.id, layer)
+			})
+    	}
         
         //Tweets layer group			
 		$.get('/data/get_tweet_meta/', function(data) {
@@ -69,7 +81,7 @@
 			L.geoJson(tweet_data, {
 				pointToLayer: function (feature, latlng) {
 					return L.marker(latlng, {icon: iconColour(feature.properties.happiness)});
-				}
+				}, onEachFeature: onEachTweet
 			}).addTo(tweets);
 		});
 			
