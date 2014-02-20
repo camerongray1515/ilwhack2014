@@ -11,11 +11,11 @@ class TwitterAPI():
         self.api = API(self.auth)
 
     def getTweets(self, since_id=0):
-        """Retrieves all tweets for the Edinburgh area"""
+        # Retrieves all tweets for the Edinburgh area
         return self.api.search(geocode='55.9507217407,-3.1923000813,20km', count=100, since_id=since_id)
 
     def tweetsToArray(self, tweets):
-        """Converts tweepy objects into readable data"""
+        # Converts tweepy objects into readable data
         tweet_dic = []
 
         max_id = 0
