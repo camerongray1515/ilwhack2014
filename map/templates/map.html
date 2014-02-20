@@ -57,6 +57,10 @@
 
 		function onEachFeaturePolygon(feature, layer) {
 			// does this feature have a property named popupContent?
+            layer.on({
+				mouseover: highlightFeature,
+				mouseout: resetHighlight
+			});
 			if (feature.properties && feature.properties.DZ_CODE) {
 				layer.bindPopup("<b>Name:	</b>" + feature.properties.DZ_NAME + "<br /><b>Code:	</b>" + feature.properties.DZ_CODE);
 			}
@@ -76,8 +80,8 @@
         L.geoJson(ukData, {onEachFeature: onEachFeaturePolygon,
         style: function(feature) {
         if (feature.properties.DZ_CODE =='S01004196' || feature.properties.DZ_CODE =='S01004197' || feature.properties.DZ_CODE =='S01004201' || feature.properties.DZ_CODE =='S01004202' || feature.properties.DZ_CODE =='S01004203' || feature.properties.DZ_CODE =='S01004208' || feature.properties.DZ_CODE =='S01004210' || feature.properties.DZ_CODE =='S01004193'){
-         return {color: 'white', dashArray: '3', fillOpacity: 0.7, fillColor: "#ff0000", weight: 2};}
-            else {return {color: 'white', dashArray: '3', fillOpacity: 0.7, fillColor:  "#00ff00", weight: 2};}
+         return {color: 'white', dashArray: '3', fillOpacity: 0.25, fillColor: "#ff0000", weight: 2};}
+            else {return {color: 'white', dashArray: '3', fillOpacity: 0.25, fillColor:  "#00ff00", weight: 2};}
                     }
                 }).addTo(geoJsonUk);
 
@@ -121,6 +125,40 @@ L.geoJson(geoJsonTweets, {oneachfeature: onEachFeatureTweet(feature, layer), ico
         //            }
         //        }).addTo(geoJsonUk);
         //}
+        
+// BORDERS ON HOVER
+        
+        function highlightFeature(e) {
+			var layer = e.target;
+
+			layer.setStyle({
+				weight: 4,
+				color: '#666',
+				dashArray: '',
+				fillOpacity: 0.75
+			});
+
+			if (!L.Browser.ie && !L.Browser.opera) {
+				layer.bringToFront();
+			}
+        }
+        
+        function resetHighlight(e) {
+            var layer = e.target;
+
+			layer.setStyle({
+				weight: 2,
+				color: 'white',
+				dashArray: 3,
+				fillOpacity: 0.25
+			});
+
+			if (!L.Browser.ie && !L.Browser.opera) {
+				layer.bringToFront();
+			}
+        }
+        
+        
 
 		var map = L.map('map', {
 				center: [55.9444, -3.1872],
