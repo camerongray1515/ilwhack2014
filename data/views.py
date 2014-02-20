@@ -21,7 +21,7 @@ def get_tweet_meta(request):
             },
             'geometry': {
                 'type': 'point',
-                'coordinates': [x.tweet.latitude, x.tweet.longitude]
+                'coordinates': [x.tweet.longitude, x.tweet.latitude]
             }
         }
 
