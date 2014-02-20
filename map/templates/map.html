@@ -4,6 +4,8 @@
 {% block title %}Map{% endblock %}
 
 {% block content %}
+    
+    <script async ="http://platform.twitter.com/widgets.js" charset="utf-8"></script>
     <div id="map">
     	<span class="fixed_top_right_brand">
 	    	<h1><a class="brand" href="#"><img class="logo_branding" width="199px" src = "{% static 'img/logo.png' %}"></a></h1>
@@ -19,6 +21,14 @@
     <script type="text/javascript" src="{% static 'js/filtered.js' %}"></script>
 
 	<script>
+	
+		$( document ).ready(function() {
+			$('.leaflet-marker-icon').click(function(){
+				console.log('test')
+				var id = Document.getElementById('data-tweet-id')
+				getText(id)
+			}
+    	)});
 
         //Custom marker icons common settings
         var tweetMarker = L.Icon.extend({
@@ -63,15 +73,15 @@
 			}
 		}
 		
-		function getText(id, layer) {
-			$.get('/data/get_tweet_meta/' + id, function(stuff) {
-				console.log(stuff);
-        		layer.bindPopup(stuff.properties.user);
+		function getText(id) {
+			$.get('/data/get_tweet/' + id, function(stuff) {
+				bootbox.alert('<div class="twitter-tweet" lang="en"><p>' + stuff.body + '</p><br /></p><p class="pull-right"> &mdash; @<a href="https://twitter.com/' + stuff.user + '">' + stuff.user + '</a>, ' + stuff.timestamp + '</p></div>', function() {
+            });
         	})
 		}
 		function onEachTweet(feature, layer) {
 			layer.on ({
-				click: getText(feature.properties.id, layer)
+				click: layer.bindPopup('<div id="tweet_id" data-tweet-id="' + feature.properties.id +'">Please wait...</div>')
 			})
     	}
         
@@ -180,4 +190,5 @@ var overlays = {
 		L.control.layers(baseLayers, overlays).setPosition("topright").addTo(map);
 
 	</script>
+	
 {% endblock %}
