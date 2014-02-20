@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Map{% endblock %}
+
+{% block content %}
+    <div id="map">
+    	<span class="fixed_top_right_brand">
+	    	<h1><a class="brand" href="#"><img class="logo_branding" width="199px" src = "{% static 'img/logo.png' %}"></a></h1>
+	    	<ul class="top_right_menu">
+	    		<li><a href="#home" class="menu_fixed">Home</a></li>
+	    		<li>|</li>
+	    		<li><a href="#about" class="menu_fixed">About</a></li>
+	    		<li>|</li>
+	    		<li><a href="#stats" class="menu_fixed">Stats</a></li>
+	    	</ul>
+	    </span>
+	</div>
+    <script type="text/javascript" src="{% static 'js/filtered.js' %}"></script>
+
+	<script>
+
+        //Custom marker icons common settings
+        var tweetMarker = L.Icon.extend({
+        options: {
+        shadowUrl: '{% static 'img/mshadow.png' %}',
+        iconSize:     [35, 50],
+        shadowSize:   [45, 50],
+        iconAnchor:   [17, 50],
+        shadowAnchor: [10, 50],
+        popupAnchor:  [-1, -45]
+        }
+        });
+
+        //Custom marker icons individual images
+        var ms5 = new tweetMarker({iconUrl: '{% static 'img/ms5.png' %}'}),
+            ms4 = new tweetMarker({iconUrl: '{% static 'img/ms4.png' %}'}),
+            ms3 = new tweetMarker({iconUrl: '{% static 'img/ms3.png' %}'}),
+            ms2 = new tweetMarker({iconUrl: '{% static 'img/ms2.png' %}'}),
+            ms1 = new tweetMarker({iconUrl: '{% static 'img/ms1.png' %}'});
+
+        //function to choose icon based on sentiment score
+
+        //Buildings layer group
+        var buildings = new L.layerGroup();
+		L.marker([55.9444, -3.1872]).bindPopup('Appleton Tower').addTo(buildings);
+		L.marker([55.9447, -3.1874]).bindPopup('Informatics Forum').addTo(buildings);
+
+        //Tweets layer group
+		var tweets = new L.layerGroup();
+        L.marker([55.94, -3.18], {icon: ms5}).bindPopup('Test tweet').addTo(tweets);
+
+		var cmAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+			cmUrl = 'http://{s}.tile.cloudmade.com/77ff4841d6f0491bab827407e8100358/{styleId}/256/{z}/{x}/{y}.png';
+
+		var minimal   = L.tileLayer(cmUrl, {styleId: 997, attribution: cmAttr});
+
+		function onEachFeaturePolygon(feature, layer) {
+			// does this feature have a property named popupContent?
+			if (feature.properties && feature.properties.DZ_CODE) {
+				layer.bindPopup("<b>Name:	</b>" + feature.properties.DZ_NAME + "<br /><b>Code:	</b>" + feature.properties.DZ_CODE);
+			}
+}
+				/*
+		function onEachFeatureTweet(feature, layer) {
+					// does this feature have a property named popupContent?
+					if (feature.properties && feature.properties.tweet_user) {
+						layer.bindPopup("<b>Username:	</b>" + feature.properties.tweet_name + "<br /><b>Tweet:	</b>" + feature.properties.tweet_content);
+					}
+		}
+*/
+
+        //geoJSON drawing with conditional colouring
+		var geoJsonUk = new L.layerGroup();
+
+        L.geoJson(ukData, {onEachFeature: onEachFeaturePolygon,
+        style: function(feature) {
+        if (feature.properties.DZ_CODE =='S01004196' || feature.properties.DZ_CODE =='S01004197' || feature.properties.DZ_CODE =='S01004201' || feature.properties.DZ_CODE =='S01004202' || feature.properties.DZ_CODE =='S01004203' || feature.properties.DZ_CODE =='S01004208' || feature.properties.DZ_CODE =='S01004210' || feature.properties.DZ_CODE =='S01004193'){
+         return {color: 'white', dashArray: '3', fillOpacity: 0.7, fillColor: "#ff0000", weight: 2};}
+            else {return {color: 'white', dashArray: '3', fillOpacity: 0.7, fillColor:  "#00ff00", weight: 2};}
+                    }
+                }).addTo(geoJsonUk);
+
+
+	        /*
+L.geoJson(geoJsonTweets, {oneachfeature: onEachFeatureTweet(feature, layer), icon : function(feature) 			{
+		        if (feature.properties.happiness >= -1 && feature.properties.happiness < -0.6 ) {
+			        return {icon: ms1};
+		        }
+		        if (feature.properties.happiness >= -0.6 && feature.properties.happiness < -0.2 ) {
+			        return {icon: ms2};
+		        }
+		        if (feature.properties.happiness >= -0.2 && feature.properties.happiness < -0.2 ) {
+			        return {icon: ms3};
+		        }
+		        if (feature.properties.happiness >= 0.2 && feature.properties.happiness < 0.6 ) {
+			        return {icon: ms4};
+		        }
+		        if (feature.properties.happiness >= 0.6 && feature.properties.happiness <= 1 ) {
+			        return {icon: ms5};
+		        }
+		       }}).addTo(tweets);
+*/
+
+
+        //CONDITIONAL FORMATTING BASED ON SIMD SCORE
+
+        //L.geoJson(ukData, {onEachFeature: onEachFeature,
+        //style: function(feature) {
+        //if (feature.properties.SIMD >= 4800){
+        // return {color: "#00ff00", weight: 2};}
+        //else if (feature.properties.SIMD >= 3600 && feature.properties.SIMD < 4800){
+        // return {color: "#7fff00", weight: 2};}
+        //else if (feature.properties.SIMD >= 2400 && feature.properties.SIMD < 3600){
+        // return {color: "#ffff00", weight: 2};}
+        //else if (feature.properties.SIMD >= 1200 && feature.properties.SIMD < 2400){
+        // return {color: "#ff7f00", weight: 2};}
+        //else if (feature.properties.SIMD < 1200){
+        // return {color: "#ff0000", weight: 2};}
+        //    else {return {color: "#ffff00", weight: 2};}
+        //            }
+        //        }).addTo(geoJsonUk);
+        //}
+
+		var map = L.map('map', {
+				center: [55.9444, -3.1872],
+				zoom: 12,
+				layers: [minimal, buildings, tweets],
+                loadingControl: true
+		});
+
+		var baseLayers = {
+		};
+
+		var overlays = {
+			"Buildings": buildings,
+            "Tweets": tweets,
+            "info" : geoJsonUk
+		};
+
+		L.control.layers(baseLayers, overlays).setPosition("topright").addTo(map);
+
+	</script>
+{% endblock %}

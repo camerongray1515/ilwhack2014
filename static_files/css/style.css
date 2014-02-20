@@ -1,0 +1,153 @@
+.navbar {
+	margin-bottom: 0 !important;
+}
+
+.fixed_top_right_brand {
+	position: absolute;
+	top: 5px;
+	right: 0px;
+	margin-right: 5px;
+	padding-right: 15px;
+	padding-left: 15px;
+	z-index: 50;
+	
+	color: #000; /* Fallback for older browsers */
+    color: rgba(0, 0, 0, 0.7);
+    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+    
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+}
+
+.fixed_top_right_brand:hover {
+	background-color: rgba(255, 255, 255, 1);
+	transition: background-color .8s ease-out;
+	-moz-transition: background-color .5s ease-out;
+	-webkit-transition: background-color .5s ease-out;
+	-o-transition: background-color .5s ease-out;
+}
+
+.fixed_top_right_brand h1{
+	font-family: ‘Exo 2’, Helvetica, sans-serif; font-weight: 100;
+	margin-top: 5px !important;
+	margin-bottom: 5px !important;
+}
+
+.fixed_top_right_menu {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	margin-right: 5px;
+	z-index: 99;
+	
+	color: #000; /* Fallback for older browsers */
+    color: rgba(0, 0, 0, 0.8);
+    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.8);
+    
+    border-radius: 4px;
+    
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    
+    padding: 10px;
+}
+
+.top_right_menu {
+	float: right;
+}
+
+.top_right_menu li {
+	display: inline-block;
+	font-family: ‘Exo 2’, Helvetica, sans-serif; font-weight: 400;
+}
+
+div.leaflet-top.leaflet-right {
+	margin-top: 85px;
+	margin-right: 5px !important;
+}
+
+/*div.leaflet-top.leaflet-right:hover {
+	background-color: rgba(255, 255, 255, 1) !important;
+	border-radius: 4px;
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+}*/
+
+div.leaflet-control-layers.leaflet-control {
+	margin-top: 5px !important;
+	margin-right: 0px;
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+}
+
+div.leaflet-control-layers.leaflet-control, .leaflet-control-zoom-in, .leaflet-control-zoom-out {
+	/*margin: 0 !important;*/
+	background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+div.leaflet-control-layers:hover,.leaflet-control:hover, .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover {
+	background-color: rgba(255, 255, 255, 1) !important;
+	transition: background-color .8s ease-out;
+	-moz-transition: background-color .5s ease-out;
+	-webkit-transition: background-color .5s ease-out;
+	-o-transition: background-color .5s ease-out;
+}
+
+div.info.leaflet-control {
+	margin-right: 0 !important;
+	margin-top: 0px !important;
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+}
+
+.logo_branding {
+	opacity:0.8;
+}
+
+.info {
+	padding: 6px 8px;
+	font: 14px/16px Arial, Helvetica, sans-serif;
+	background: white;
+	background: rgba(255,255,255,0.8);
+	box-shadow: 0 0 15px rgba(0,0,0,0.2);
+	border-radius: 5px;
+}
+.info h4 {
+	margin: 0 0 5px;
+	color: #777;
+}
+
+.legend {
+	text-align: left;
+	line-height: 18px;
+	color: #555;
+}
+.legend i {
+	width: 18px;
+	height: 18px;
+	float: left;
+	margin-right: 8px;
+	opacity: 0.7;
+}
+
+.leaflet-control-loading {
+    /* This is where your loading indicator would go */
+    background: url(../img/loading.gif);
+}
+
+.leaflet-control-loading,
+.leaflet-control-zoom a.leaflet-control-loading ,
+.leaflet-control-zoomslider a.leaflet-control-loading {
+    display: none;
+}
+
+.leaflet-control-loading.is-loading,
+.leaflet-control-zoom a.leaflet-control-loading.is-loading,
+.leaflet-control-zoomslider a.leaflet-control-loading.is-loading  {
+    display: block;
+}
+
+/* Necessary for display consistency in Leaflet >= 0.6 */
+.leaflet-bar-part-bottom {
+    border-bottom: medium none;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
