@@ -1,6 +1,6 @@
 from sympy import *
 from sympy.geometry import *
-from regions import *
+from data_zones import *
 
 class Location():
 
