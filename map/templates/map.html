@@ -96,25 +96,19 @@
             layer.on({
 				mouseover: highlightFeature,
 				mouseout: resetHighlight
+//                , click: zoomToFeature
 			});
 			if (feature.properties && feature.properties.DZ_CODE) {
 				layer.bindPopup("<b>Name:	</b>" + feature.properties.DZ_NAME + "<br /><b>Code:	</b>" + feature.properties.DZ_CODE);
 			}
 		}
 
-        //geoJSON drawing with conditional colouring
-		var geoJsonUk = new L.layerGroup();
-
-//        L.geoJson(ukData, {onEachFeature: onEachFeaturePolygon,
-//        style: function(feature) {
-//        if (feature.properties.DZ_CODE =='S01004196' || feature.properties.DZ_CODE =='S01004197' || feature.properties.DZ_CODE =='S01004201' || feature.properties.DZ_CODE =='S01004202' || feature.properties.DZ_CODE =='S01004203' || feature.properties.DZ_CODE =='S01004208' || feature.properties.DZ_CODE =='S01004210' || feature.properties.DZ_CODE =='S01004193'){
-//         return {color: 'white', dashArray: '3', fillOpacity: 0.25, fillColor: "#ff0000", weight: 2};}
-//            else {return {color: 'white', dashArray: '3', fillOpacity: 0.25, fillColor:  "#00ff00", weight: 2};}
-//                    }
-//                }).addTo(geoJsonUk);
-//        
+//geoJSON drawing with conditional colouring
         
-L.geoJson(ukData, {onEachFeature: onEachFeaturePolygon, style: style}).addTo(geoJsonUk);
+
+        
+var geoJsonUk = new L.layerGroup();      
+
         
 function getColor(x) {
     return x > 4800 ? '#00bf00' :
@@ -139,7 +133,7 @@ function style(feature) {
         
 // BORDERS ON HOVER
         
-        function highlightFeature(e) {
+function highlightFeature(e) {
 			var layer = e.target;
 
 			layer.setStyle({
@@ -154,37 +148,33 @@ function style(feature) {
 			}
         }
         
-        function resetHighlight(e) {
-            var layer = e.target;
-
-			layer.setStyle({
-				weight: 2,
-				color: 'white',
-				dashArray: 3,
-				fillOpacity: 0.25
-			});
-
-			if (!L.Browser.ie && !L.Browser.opera) {
-				layer.bringToFront();
-			}
-        }
+var geojson;        
         
-        
+function resetHighlight(e) {
+    geojson.resetStyle(e.target);
+}
 
-		var map = L.map('map', {
+function zoomToFeature(e) {
+			map.fitBounds(e.target.getBounds());
+		}
+
+        
+geojson = L.geoJson(ukData, {onEachFeature: onEachFeaturePolygon, style: style}).addTo(geoJsonUk);        
+        
+var map = L.map('map', {
 				center: [55.9444, -3.1872],
 				zoom: 12,
 				layers: [minimal, buildings],
                 loadingControl: true
 		});
 
-		var baseLayers = {
+var baseLayers = {
 		};
 
-		var overlays = {
+var overlays = {
 			"Buildings": buildings,
             "Tweets": tweets,
-            "info" : geoJsonUk
+            "Data Zones" : geoJsonUk
 		};
 
 		L.control.layers(baseLayers, overlays).setPosition("topright").addTo(map);
