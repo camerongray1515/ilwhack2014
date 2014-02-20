@@ -14,8 +14,6 @@ def get_tweet_meta(request):
             'type': 'Feature',
             'properties': {
                 'id': x.tweet.id,
-                'tweet_user': x.tweet.sender,
-                'tweet_content': x.tweet.body,
                 'happiness': x.polarity
             },
             'geometry': {
