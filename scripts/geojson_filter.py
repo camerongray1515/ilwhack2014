@@ -2,12 +2,12 @@
  polygons that lie entirely inside the box made by the 4 coordinates given """
 
 import sys
-import string
 import json
 
 if len(sys.argv) != 6:
     print "Usage: geojson_filter.py [path to GeoJSON file] [top] [bottom] [right] [left]"
     exit()
+
 
 def main():
     box = {
@@ -52,6 +52,7 @@ def main():
     filtered_json = json.dumps(data_full)
 
     print filtered_json
+
 
 def is_point_inside_box(point, box):
     # Check if it is above or below box
