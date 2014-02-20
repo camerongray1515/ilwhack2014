@@ -7,4 +7,4 @@ class DataZones():
         self.polygons = polygons
 
     def sortDataZones(self, point):
-        return DataZones(sorted(self.polygons, key = point.distance(polygon.centroid())))
+        return DataZones(sorted(self.polygons, key = point.distance(polygon.centroid)))
