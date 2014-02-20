@@ -62,6 +62,18 @@
 				return ms1;
 			}
 		}
+		
+		function getText(id, layer) {
+			$.get('/data/get_tweet_meta/' + id, function(stuff) {
+				console.log(stuff);
+        		layer.bindPopup(stuff.properties.user);
+        	})
+		}
+		function onEachTweet(feature, layer) {
+			layer.on ({
+				click: getText(feature.properties.id, layer)
+			})
+    	}
         
         //Tweets layer group			
 		$.get('/data/get_tweet_meta/', function(data) {
@@ -69,7 +81,7 @@
 			L.geoJson(tweet_data, {
 				pointToLayer: function (feature, latlng) {
 					return L.marker(latlng, {icon: iconColour(feature.properties.happiness)});
-				}
+				}, onEachFeature: onEachTweet
 			}).addTo(tweets);
 		});
 			
@@ -93,33 +105,37 @@
         //geoJSON drawing with conditional colouring
 		var geoJsonUk = new L.layerGroup();
 
-        L.geoJson(ukData, {onEachFeature: onEachFeaturePolygon,
-        style: function(feature) {
-        if (feature.properties.DZ_CODE =='S01004196' || feature.properties.DZ_CODE =='S01004197' || feature.properties.DZ_CODE =='S01004201' || feature.properties.DZ_CODE =='S01004202' || feature.properties.DZ_CODE =='S01004203' || feature.properties.DZ_CODE =='S01004208' || feature.properties.DZ_CODE =='S01004210' || feature.properties.DZ_CODE =='S01004193'){
-         return {color: 'white', dashArray: '3', fillOpacity: 0.25, fillColor: "#ff0000", weight: 2};}
-            else {return {color: 'white', dashArray: '3', fillOpacity: 0.25, fillColor:  "#00ff00", weight: 2};}
-                    }
-                }).addTo(geoJsonUk);
-
-
-        //CONDITIONAL FORMATTING BASED ON SIMD SCORE
-
-        //L.geoJson(ukData, {onEachFeature: onEachFeature,
-        //style: function(feature) {
-        //if (feature.properties.SIMD >= 4800){
-        // return {color: "#00ff00", weight: 2};}
-        //else if (feature.properties.SIMD >= 3600 && feature.properties.SIMD < 4800){
-        // return {color: "#7fff00", weight: 2};}
-        //else if (feature.properties.SIMD >= 2400 && feature.properties.SIMD < 3600){
-        // return {color: "#ffff00", weight: 2};}
-        //else if (feature.properties.SIMD >= 1200 && feature.properties.SIMD < 2400){
-        // return {color: "#ff7f00", weight: 2};}
-        //else if (feature.properties.SIMD < 1200){
-        // return {color: "#ff0000", weight: 2};}
-        //    else {return {color: "#ffff00", weight: 2};}
-        //            }
-        //        }).addTo(geoJsonUk);
-        //}
+//        L.geoJson(ukData, {onEachFeature: onEachFeaturePolygon,
+//        style: function(feature) {
+//        if (feature.properties.DZ_CODE =='S01004196' || feature.properties.DZ_CODE =='S01004197' || feature.properties.DZ_CODE =='S01004201' || feature.properties.DZ_CODE =='S01004202' || feature.properties.DZ_CODE =='S01004203' || feature.properties.DZ_CODE =='S01004208' || feature.properties.DZ_CODE =='S01004210' || feature.properties.DZ_CODE =='S01004193'){
+//         return {color: 'white', dashArray: '3', fillOpacity: 0.25, fillColor: "#ff0000", weight: 2};}
+//            else {return {color: 'white', dashArray: '3', fillOpacity: 0.25, fillColor:  "#00ff00", weight: 2};}
+//                    }
+//                }).addTo(geoJsonUk);
+//        
+        
+L.geoJson(ukData, {onEachFeature: onEachFeaturePolygon, style: style}).addTo(geoJsonUk);
+        
+function getColor(x) {
+    return x > 4800 ? '#00bf00' :
+           x > 3600 ? '#7fff00' :
+           x > 2400 ? '#ffff00' :
+           x > 1200 ? '#ff7f00' :
+           x > 0    ? '#bf0000' :
+                      '#ffff00';
+}
+        
+function style(feature) {
+    return {
+        fillColor: '#00bf00',
+//        fillColor: getColor(feature.properties.score),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.25 
+    };
+}
         
 // BORDERS ON HOVER
         
