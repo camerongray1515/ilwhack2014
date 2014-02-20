@@ -8,6 +8,7 @@ class Location():
         self.point = point
 
     def pointDataZone(self, zones):
+        # returns data zone tweet originated from
         sorted_zones = zones.sortDataZones(self.point)
         
         for z in sorted_zones:
