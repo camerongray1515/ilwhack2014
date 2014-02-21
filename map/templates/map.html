@@ -8,13 +8,6 @@
     <div id="map">
     	<span class="fixed_top_right_brand">
 	    	<h1><a class="brand" href="#"><img class="logo_branding" width="199px" src = "{% static 'img/logo.png' %}"></a></h1>
-	    	<ul class="top_right_menu">
-	    		<li><a href="#home" class="menu_fixed">Home</a></li>
-	    		<li>|</li>
-	    		<li><a href="about" class="menu_fixed">About</a></li>
-	    		<li>|</li>
-	    		<li><a href="#stats" class="menu_fixed">Stats</a></li>
-	    	</ul>
 	    </span>
 	</div>
 	
@@ -70,8 +63,9 @@
 		}
 
 		//Placeholder function which will return a wordcloud.
-		function getWordCloud() {
-			bootbox.alert('<div><p>test</p><img src="http://placehold.it/350x150" /></div>', function() {});
+		function getWordCloud(id) {
+			console.log('done')
+			bootbox.alert('<iframe style="border: 0; border-radius:5px;" width="560px" height="350px" src="/data/get_tag_cloud/' + id + '"></iframe>', function() {});
 		}
 
 		//Function which will be run against every tweet added from /data/get_tweet_meta
@@ -113,7 +107,7 @@
 				mouseout: resetHighlight
 			});
 			if (feature.properties && feature.properties.DZ_CODE) {
-				layer.bindPopup('<b>Name:	</b>' + feature.properties.DZ_NAME + '<br /><b>Code:	</b>' + feature.properties.DZ_CODE + '<br /><b>SIMD Rank:	</b>' + Math.floor(feature.properties.SIMD_RANK / 6505 * 100) + '/100 <br /><br /><button class="btn btn-primary" onClick="getWordCloud()">Word Cloud</button>');
+				layer.bindPopup('<b>Name:	</b>' + feature.properties.DZ_NAME + '<br /><b>Code:	</b>' + feature.properties.DZ_CODE + '<br /><b>SIMD Rank:	</b>' + Math.floor(feature.properties.SIMD_RANK / 6505 * 100) + '/100 <br /><br /><button class="btn btn-primary" onClick="getWordCloud(\'' + feature.properties.DZ_CODE + '\')">Word Cloud</button>');
 			}
 		}
 

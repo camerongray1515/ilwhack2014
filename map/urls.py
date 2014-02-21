@@ -5,5 +5,4 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'map.views.main'),
-    url(r'^about/$', 'map.views.about'),
 )
