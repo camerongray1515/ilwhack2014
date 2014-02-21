@@ -20,6 +20,7 @@
 	</div>
 	
 	<script src="{% static 'js/filtered.js' %}"></script>
+	<script async src="http://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 	<script>
 
@@ -43,10 +44,6 @@
             ms1 = new tweetMarker({iconUrl: '{% static 'img/ms1.png' %}'});
 
         //function to choose icon based on sentiment score
-
-        //Buildings layer group
-        var buildings = new L.layerGroup();
-		
 		function iconColour(d) {
 			if (d <= 1 && d > 0.6){
 				return ms5;
@@ -64,30 +61,31 @@
 				return ms1;
 			}
 		}
+		var tweets = new L.layerGroup();
+        var geoJsonUk = new L.layerGroup(); 
 		
 		function getText(id) {
-			$.get('/data/get_tweet/' + id, function(stuff) {
-				bootbox.alert('<div class="twitter-tweet" lang="en"><p>' + stuff.body + '</p><br /></p><p class="pull-right"> &mdash; @<a href="https://twitter.com/' + stuff.user + '">' + stuff.user + '</a>, ' + stuff.timestamp + '</p></div>', function() {
+			$.get('/data/get_tweet/' + id, function(stuff) { 
+				bootbox.alert('<p class="twitter-tweet" lang="en"><p>Today jjakji and Nerchio advanced from Group B in WCS EU Ro32. Two groups down, six more to go - <a href="http://t.co/tflsgqrPYE">http://t.co/tflsgqrPYE</a></p>&mdash; TeamLiquid (@TeamLiquidnet) <a href="https://twitter.‹com/TeamLiquidnet/statuses/436670963586170880">February 21, 2014</a></p>', function() {
+                console.log("Alert Callback");
             });
         	})
 		}
-		function onEachTweet(feature, layer) {
-			layer.on ({
-				click: layer.bindPopup('<div id="tweet_id" data-tweet-id="' + /*+ feature.properties.id +'*/ '">Please wait...</div>')
-			})
-    	}
-        var tweets = new L.layerGroup();
-        var geoJsonUk = new L.layerGroup();   
+		function onEachFeatureTweet(feature, layer) {
+					layer.on({
+						click: layer.bindPopup('<button class="btn btn-primary" onClick="getText(' + feature.properties.id + ')">Get Tweet</button>')
+
+  		})}  
         
         //Tweets layer group			
 		$.get('/data/get_tweet_meta/', function(data) {
-			var tweet_data = data;
-			L.geoJson(tweet_data, {
-				pointToLayer: function (feature, latlng) {
-					return L.marker(latlng, {icon: iconColour(feature.properties.happiness)});
-				}, onEachFeature: onEachTweet
-			}).addTo(tweets);
-		});		
+ 			var tweet_data = data;
+ 			L.geoJson(tweet_data, {
+ 				pointToLayer: function (feature, latlng) {
+ 					return L.marker(latlng, {icon: iconColour(feature.properties.happiness)});
+				},  onEachFeature: onEachFeatureTweet
+ 			}).addTo(tweets);
+ 		});
 		
 		var geojson = L.geoJson(ukData, {onEachFeature: onEachFeaturePolygon, style: style}).addTo(geoJsonUk); 
 
@@ -155,7 +153,7 @@ function resetHighlight(e) {
 var map = L.map('map', {
 				center: [55.9444, -3.1872],
 				zoom: 12,
-				layers: [minimal, buildings],
+				layers: [minimal],
                 loadingControl: true
 		});
 
@@ -163,7 +161,6 @@ var baseLayers = {
 		};
 
 var overlays = {
-			"Buildings": buildings,
             "Tweets": tweets,
             "Data Zones" : geoJsonUk
 		};
