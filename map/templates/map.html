@@ -21,14 +21,6 @@
     <script type="text/javascript" src="{% static 'js/filtered.js' %}"></script>
 
 	<script>
-	
-		$( document ).ready(function() {
-			$('.leaflet-marker-icon').click(function(){
-				console.log('test')
-				var id = Document.getElementById('data-tweet-id')
-				getText(id)
-			}
-    	)});
 
         //Custom marker icons common settings
         var tweetMarker = L.Icon.extend({
@@ -53,7 +45,6 @@
 
         //Buildings layer group
         var buildings = new L.layerGroup();
-		var tweets = new L.layerGroup();
 		
 		function iconColour(d) {
 			if (d <= 1 && d > 0.6){
@@ -81,20 +72,32 @@
 		}
 		function onEachTweet(feature, layer) {
 			layer.on ({
-				click: layer.bindPopup('<div id="tweet_id" data-tweet-id="' + feature.properties.id +'">Please wait...</div>')
+				click: layer.bindPopup('<div id="tweet_id" data-tweet-id="' + /*+ feature.properties.id +'*/ '">Please wait...</div>')
 			})
     	}
+        var tweets = new L.layerGroup();
+        var geoJsonUk = new L.layerGroup();   
         
         //Tweets layer group			
-		$.get('/data/get_tweet_meta/', function(data) {
-			var tweet_data = data;
+		$.get('/data/get_tweet_meta/', function(twitter_data) {
+			var tweet_data = twitter_data;
 			L.geoJson(tweet_data, {
 				pointToLayer: function (feature, latlng) {
 					return L.marker(latlng, {icon: iconColour(feature.properties.happiness)});
 				}, onEachFeature: onEachTweet
 			}).addTo(tweets);
 		});
-			
+		
+		$.get("{% static 'js/filtered.js' %}", function(polygon_data) {
+			var simd_data = polygon_data;
+			L.geoJson(simd_data, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng, {icon: iconColour(feature.properties.happiness)});
+				}, onEachFeature: onEachTweet
+			}).addTo(tweets);
+		});	
+		
+		geojson = L.geoJson(ukData, {onEachFeature: onEachFeaturePolygon, style: style}).addTo(geoJsonUk);
 
 		var cmAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 			cmUrl = 'http://{s}.tile.cloudmade.com/77ff4841d6f0491bab827407e8100358/{styleId}/256/{z}/{x}/{y}.png';
@@ -114,9 +117,6 @@
 		}
 
 //geoJSON drawing with conditional colouring        
-
-        
-var geoJsonUk = new L.layerGroup();      
         
 function getColor(x) {
     return (x > 5200) ? '#00bf00' :
@@ -164,9 +164,7 @@ function resetHighlight(e) {
 function zoomToFeature(e) {
 			map.fitBounds(e.target.getBounds());
 		}
-
-        
-geojson = L.geoJson(ukData, {onEachFeature: onEachFeaturePolygon, style: style}).addTo(geoJsonUk);        
+      
         
 var map = L.map('map', {
 				center: [55.9444, -3.1872],
