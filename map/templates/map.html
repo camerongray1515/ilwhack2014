@@ -75,9 +75,17 @@
 				click: layer.bindPopup('<button class="btn btn-primary" onClick="getText(' + id + ')">View Tweet</button>')
 			})
     	}
+    	function onEachTweetAverage(feature, layer) {
+			id = feature.properties.id;
+			layer.on ({
+				click: layer.bindPopup('<button class="btn btn-primary" onClick="getText(' + id + ')">View Tweet</button>')
+			})
+    	}
         
-        //Setting up the two main layergroups
+        //Setting up the tthree main layergroups
         var tweets = new L.layerGroup();
+        var tweets_average = new L.layerGroup();
+
         var geoJsonUk = new L.layerGroup();   
         
         //Loading the polygons of the SIMD data, without AJAX.
@@ -91,6 +99,15 @@
 					return L.marker(latlng, {icon: iconColour(feature.properties.happiness)});
 				}, onEachFeature: onEachTweet
 			}).addTo(tweets);
+		});	
+		
+		$.get('/data/get_average_tweet_meta/', function(data_average) {
+			var tweet_average_data = data_average;
+			L.geoJson(tweet_average_data, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng, {icon: iconColour(feature.properties.happiness)});
+				}, onEachFeature: onEachTweetAverage
+			}).addTo(tweets_average);
 		});		
 
 		//Attributions required by the terms of the licenses we use.
@@ -163,7 +180,8 @@
 		var baseLayers;
 
 		var overlays = {
-            "Tweets": tweets,
+			"Region Tweets": tweets_average,
+            "Individual Tweets": tweets,
             "Data Zones" : geoJsonUk
 		};
 
