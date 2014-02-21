@@ -4,8 +4,7 @@
 {% block title %}Map{% endblock %}
 
 {% block content %}
-    
-    <script async ="http://platform.twitter.com/widgets.js" charset="utf-8"></script>
+   
     <div id="map">
     	<span class="fixed_top_right_brand">
 	    	<h1><a class="brand" href="#"><img class="logo_branding" width="199px" src = "{% static 'img/logo.png' %}"></a></h1>
@@ -25,14 +24,14 @@
 
         //Custom marker icons common settings
         var tweetMarker = L.Icon.extend({
-        options: {
-        shadowUrl: '{% static 'img/mshadow.png' %}',
-        iconSize:     [35, 50],
-        shadowSize:   [45, 50],
-        iconAnchor:   [17, 50],
-        shadowAnchor: [10, 50],
-        popupAnchor:  [-1, -45]
-        }
+	        options: {
+		        shadowUrl: '{% static 'img/mshadow.png' %}',
+		        iconSize:     [35, 50],
+		        shadowSize:   [45, 50],
+		        iconAnchor:   [17, 50],
+		        shadowAnchor: [10, 50],
+		        popupAnchor:  [-1, -45]
+        	}
         });
 
         //Custom marker icons individual images
@@ -43,10 +42,6 @@
             ms1 = new tweetMarker({iconUrl: '{% static 'img/ms1.png' %}'});
 
         //function to choose icon based on sentiment score
-
-        //Buildings layer group
-        var buildings = new L.layerGroup();
-		
 		function iconColour(d) {
 			if (d <= 1 && d > 0.6){
 				return ms5;
@@ -65,21 +60,36 @@
 			}
 		}
 		
+		//Function to return a tweet in the form of a bootbox modal
 		function getText(id) {
 			$.get('/data/get_tweet/' + id, function(stuff) {
-				bootbox.alert('<div class="twitter-tweet" lang="en"><p>' + stuff.body + '</p><br /></p><p class="pull-right"> &mdash; @<a href="https://twitter.com/' + stuff.user + '">' + stuff.user + '</a>, ' + stuff.timestamp + '</p></div>', function() {
-            });
+				bootbox.alert(
+					'<div class="twitter-tweet" lang="en"><p>' + stuff.body + '</p><br /></p><p class="pull-right"> &mdash; @<a href="https://twitter.com/' + stuff.user + '">' + stuff.user + '</a>, ' + stuff.timestamp + '</p></div>', function() {
+           		});
         	})
 		}
+
+		//Placeholder function which will return a wordcloud.
+		function getWordCloud() {
+			bootbox.alert('<div><p>test</p><img src="http://placehold.it/350x150" /></div>', function() {});
+		}
+
+		//Function which will be run against every tweet added from /data/get_tweet_meta
 		function onEachTweet(feature, layer) {
+			id = feature.properties.id;
 			layer.on ({
-				click: layer.bindPopup('<div id="tweet_id" data-tweet-id="' + /*+ feature.properties.id +'*/ '">Please wait...</div>')
+				click: layer.bindPopup('<button class="btn btn-primary" onClick="getText(' + id + ')">View Tweet</button>')
 			})
     	}
+        
+        //Setting up the two main layergroups
         var tweets = new L.layerGroup();
         var geoJsonUk = new L.layerGroup();   
         
-        //Tweets layer group			
+        //Loading the polygons of the SIMD data, without AJAX.
+        var geojson = L.geoJson(ukData, {onEachFeature: onEachFeaturePolygon, style: style}).addTo(geoJsonUk); 
+
+        //Loading the tweets JSON, converting it to a layer and then passing it through onEachTweet			
 		$.get('/data/get_tweet_meta/', function(data) {
 			var tweet_data = data;
 			L.geoJson(tweet_data, {
@@ -88,52 +98,49 @@
 				}, onEachFeature: onEachTweet
 			}).addTo(tweets);
 		});		
-		
-		var geojson = L.geoJson(ukData, {onEachFeature: onEachFeaturePolygon, style: style}).addTo(geoJsonUk); 
 
+		//Attributions required by the terms of the licenses we use.
 		var cmAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 			cmUrl = 'http://{s}.tile.cloudmade.com/77ff4841d6f0491bab827407e8100358/{styleId}/256/{z}/{x}/{y}.png';
 
+		//Default style
 		var minimal   = L.tileLayer(cmUrl, {styleId: 997, attribution: cmAttr});
 
+		//Function which will be run against every tweet added from /js/filtered.js. Adds mouseover functionality and a popup.
 		function onEachFeaturePolygon(feature, layer) {
-			// does this feature have a property named popupContent?
             layer.on({
 				mouseover: highlightFeature,
 				mouseout: resetHighlight
-//                , click: zoomToFeature
 			});
 			if (feature.properties && feature.properties.DZ_CODE) {
-				layer.bindPopup("<b>Name:	</b>" + feature.properties.DZ_NAME + "<br /><b>Code:	</b>" + feature.properties.DZ_CODE + "<br /><b>SIMD Rank:	</b>" + Math.floor(feature.properties.SIMD_RANK / 6505 * 100) + "/100");
+				layer.bindPopup('<b>Name:	</b>' + feature.properties.DZ_NAME + '<br /><b>Code:	</b>' + feature.properties.DZ_CODE + '<br /><b>SIMD Rank:	</b>' + Math.floor(feature.properties.SIMD_RANK / 6505 * 100) + '/100 <br /><br /><button class="btn btn-primary" onClick="getWordCloud()">Word Cloud</button>');
 			}
 		}
 
-//geoJSON drawing with conditional colouring
-          
-function getColor(x) {
-    return x > 4800 ? '#00bf00' :
-           x > 3600 ? '#7fff00' :
-           x > 2400 ? '#ffff00' :
-           x > 1200 ? '#ff7f00' :
-           x > 0    ? '#bf0000' :
-                      '#ffff00';
-}
+		//Function which will return the Hex colour corresponding to the SIMD rank of a polygon       
+		function getColor(x) {
+			if (x > 5200) {return '#00bf00';}
+			else if (x <= 5200 && x > 3900) {return '#7fff00';}
+			else if (x <= 3900 && x > 2600) {return '#ffff00';}
+			else if (x <= 2600 && x > 1300) {return '#ff7f00';}
+			else if (x <= 1300 && x >= 0) {return '#bf0000';}
+			else { return '#7f7f7f';}
+		}
         
-function style(feature) {
-    return {
-        fillColor: '#00bf00',
-//        fillColor: getColor(feature.properties.score),
-        weight: 2,
-        opacity: 1,
-        color: 'white',
-        dashArray: '3',
-        fillOpacity: 0.25 
-    };
-}
+        //Function which will provides the styles for a given polygon
+		function style(feature) {
+		    return {
+		      	fillColor: getColor(feature.properties.SIMD_RANK),
+		        weight: 2,
+		        opacity: 1,
+		        color: 'white',
+		        dashArray: '3',
+		        fillOpacity: 0.25 
+		    };
+		}
         
-// BORDERS ON HOVER
-        
-function highlightFeature(e) {
+		//BORDERS ON HOVER       
+		function highlightFeature(e) {
 			var layer = e.target;
 
 			layer.setStyle({
@@ -146,24 +153,22 @@ function highlightFeature(e) {
 			if (!L.Browser.ie && !L.Browser.opera) {
 				layer.bringToFront();
 			}
-        }       
+		}       
         
-function resetHighlight(e) {
-    geojson.resetStyle(e.target);
-}
+		function resetHighlight(e) {
+		    geojson.resetStyle(e.target);
+		}
      
-var map = L.map('map', {
-				center: [55.9444, -3.1872],
-				zoom: 12,
-				layers: [minimal, buildings],
-                loadingControl: true
+		var map = L.map('map', {
+			center: [55.9444, -3.1872],
+			zoom: 12,
+			layers: [minimal],
+            loadingControl: true
 		});
 
-var baseLayers = {
-		};
+		var baseLayers;
 
-var overlays = {
-			"Buildings": buildings,
+		var overlays = {
             "Tweets": tweets,
             "Data Zones" : geoJsonUk
 		};
