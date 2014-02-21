@@ -13,6 +13,8 @@ def get_tweet_meta(request):
         'type': 'FeatureCollection',
         'features': []
     }
+
+    n = 0
     for x in raw_data:
         # Check the number of decimal places to see if we want the tweet or not
         num_decimal_places_latitude = len(str(x.tweet.latitude).split('.')[1])
@@ -38,6 +40,11 @@ def get_tweet_meta(request):
         }
 
         geo_json_tweets['features'].append(geo_json_tweet)
+
+        if n == 500:
+            break
+
+        n += 1
 
     return HttpResponse(json.dumps(geo_json_tweets, use_decimal=True), content_type='application/json')
 
