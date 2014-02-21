@@ -109,7 +109,7 @@
 //                , click: zoomToFeature
 			});
 			if (feature.properties && feature.properties.DZ_CODE) {
-				layer.bindPopup("<b>Name:	</b>" + feature.properties.DZ_NAME + "<br /><b>Code:	</b>" + feature.properties.DZ_CODE + "<br /><b>SIMD Rank:	</b>" + feature.properties.SIMD_RANK);
+				layer.bindPopup("<b>Name:	</b>" + feature.properties.DZ_NAME + "<br /><b>Code:	</b>" + feature.properties.DZ_CODE + "<br /><b>SIMD Rank:	</b>" + Math.floor(feature.properties.SIMD_RANK / 6505 * 100) + "/100");
 			}
 		}
 
