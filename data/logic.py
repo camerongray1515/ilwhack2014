@@ -1,5 +1,6 @@
 import simplejson as json
 import re
+import math
 
 from tweepy import *
 from textblob import TextBlob
@@ -202,3 +203,51 @@ class TagCloud():
         body = re.sub(r"[^\w\s'#]*", '', body)
 
         return body
+
+class CronGenerators():
+    def generate_average_tweet_meta(self):
+        """ Pull in all tweets and their regions and calculate the average happiness per region """
+        data_zones = DataZone.objects.all()
+
+        geo_json_tweets = {
+            'type': 'FeatureCollection',
+            'features': []
+        }
+
+
+        for data_zone in data_zones:
+            # Get all tweets in this zone
+            locations = TweetLocation.objects.filter(zone=data_zone)
+
+            if len(locations) > 0:
+                zone_code = data_zone.code
+
+                average_score = 0
+                for location in locations:
+                    tweet = location.tweet
+                    polarity = HappinessScore.objects.get(tweet=tweet).polarity
+                    average_score += polarity
+
+                    center = [tweet.longitude, tweet.latitude]
+
+                average_score = average_score / len(locations)
+
+                geo_json_tweet = {
+                    'type': 'Feature',
+                    'properties': {
+                        'code': zone_code,
+                        'happiness': average_score
+                    },
+                    'geometry': {
+                        'type': 'Point',
+                        'coordinates': center
+                    }
+                }
+
+                geo_json_tweets['features'].append(geo_json_tweet)
+
+        json_string = json.dumps(geo_json_tweets)
+
+        cache_entry = Cache.objects.get(name='average_tweet_meta')
+        cache_entry.content = json_string
+        cache_entry.save()

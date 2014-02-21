@@ -79,7 +79,7 @@ def get_tag_cloud(request, region_code):
         body_text = "Region Empty"
 
     tags = make_tags(get_tag_counts(body_text)[:50], maxsize=50, colors=COLOR_SCHEMES['audacity'])
-    data = create_html_data(tags, (700,350), layout=LAYOUT_HORIZONTAL, fontname='PT Sans Regular')
+    data = create_html_data(tags, (560,450), layout=LAYOUT_HORIZONTAL, fontname='PT Sans Regular')
 
     context = {}
         
@@ -92,3 +92,8 @@ def get_tag_cloud(request, region_code):
     context['css'] = "".join("a.%(cname)s{color:%(normal)s;}a.%(cname)s:hover{color:%(hover)s;}" % {'cname':k, 'normal': v[0], 'hover': v[1]} for k,v in data['css'].items())
 
     return render_to_response('tag_cloud.html', {'tags': context['tags'], 'css': context['css']})
+
+def get_average_tweet_meta(request):
+    cache_entry = Cache.objects.get(name='average_tweet_meta')
+
+    return HttpResponse(cache_entry.content, content_type='application/json')

@@ -23,3 +23,7 @@ class DataZone(models.Model):
 class TweetLocation(models.Model):
     zone = models.ForeignKey(DataZone)
     tweet = models.OneToOneField(Tweet)
+
+class Cache(models.Model):
+    name = models.CharField(max_length=50)
+    content = models.TextField()
