@@ -65,7 +65,7 @@
 		//Placeholder function which will return a wordcloud.
 		function getWordCloud(id) {
 			console.log('done')
-			bootbox.alert('<iframe style="border: 0; border-radius:5px;" width="560px" height="350px" src="/data/get_tag_cloud/' + id + '"></iframe>', function() {});
+			bootbox.alert('<iframe style="border: 0; border-radius:5px; overflow:none;" width="560px" height="450px" src="/data/get_tag_cloud/' + id + '"></iframe>', function() {});
 		}
 
 		//Function which will be run against every tweet added from /data/get_tweet_meta
@@ -78,7 +78,7 @@
     	function onEachTweetAverage(feature, layer) {
 			id = feature.properties.id;
 			layer.on ({
-				click: layer.bindPopup('<button class="btn btn-primary" onClick="getText(' + id + ')">View Tweet</button>')
+				click: layer.bindPopup('<button class="btn btn-primary" onClick="getWordCloud(\'' + feature.properties.code + '\')">Word Cloud</button>')
 			})
     	}
         
