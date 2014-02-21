@@ -1,8 +1,11 @@
+import simplejson as json
+import re
+
 from tweepy import *
 from textblob import TextBlob
 from time import sleep
 
-from models import Tweet, HappinessScore
+from models import *
 
 class TwitterAPI():
 
@@ -105,3 +108,97 @@ class DataCollection():
         print "There are currently " + str(num_tweets) + " tweets in the database"
 
         return max_id
+
+
+class DataZones():
+
+    def import_data_zones(self):
+        zone_json_path = raw_input("Enter path to GeoJSON file containing data zones followed by [Enter]: ")
+
+        json_string = open(zone_json_path).read()
+
+        geojson = json.loads(json_string)
+
+        data_zones = geojson['features']
+
+        for x in data_zones:
+            print "Importing zone: {0}".format(x['properties']['DZ_CODE'])
+
+            polygon = x['geometry']['coordinates']
+            polygon_json = json.dumps(polygon)
+
+            zone = DataZone()
+            zone.code = x['properties']['DZ_CODE']
+            zone.name = x['properties']['DZ_NAME']
+            zone.polygon = polygon_json
+            zone.save()
+
+    def point_in_poly(self, point, poly):
+        x = float(point[0])
+        y = float(point[1])
+
+        n = len(poly)
+        inside = False
+
+        while len(poly[0]) != 2:
+            poly[0] = poly[0][0]
+
+        p1x,p1y = poly[0]
+        for i in range(n+1):
+            p2x,p2y = poly[i % n]
+            if y > min(p1y,p2y):
+                if y <= max(p1y,p2y):
+                    if x <= max(p1x,p2x):
+                        if p1y != p2y:
+                            xints = (y-p1y)*(p2x-p1x)/(p2y-p1y)+p1x
+                        if p1x == p2x or x <= xints:
+                            inside = not inside
+            p1x,p1y = p2x,p2y
+
+        return inside
+
+    def find_tweet_zones(self):
+        print "Loading all tweets..."
+        tweets = Tweet.objects.all()
+
+        print "Loading all zones..."
+        zones = DataZone.objects.all()
+
+        num_tweets = len(tweets)
+        num_zones = len(zones)
+
+        print "There are {0} tweets and {1} zones".format(num_tweets, num_zones)
+
+        tweet_counter = 0
+        for tweet in tweets:
+            tweet_counter += 1
+
+            print "Checking tweet {0}/{1}...".format(tweet_counter, num_tweets)
+
+            zone_counter = 0
+            for zone in zones:
+                zone_counter += 1
+
+                polygon = json.loads(zone.polygon)[0]
+
+                if self.point_in_poly([tweet.longitude, tweet.latitude], polygon):                    
+                    # Insert the location into the database
+                    x = TweetLocation()
+                    x.zone = zone
+                    x.tweet = tweet
+                    x.save()
+
+                    break
+
+class TagCloud():
+    def filter_body(self, body):      
+        # Remove @ mentions
+        body = re.sub(r'@(([A-z]|[0-9])*)', '', body)
+
+        # Remove URLs
+        body = re.sub(r'https?://\w*.\w*/\w*', '', body)
+
+        # Remove non-alphanumeric characters
+        body = re.sub(r"[^\w\s'#]*", '', body)
+
+        return body

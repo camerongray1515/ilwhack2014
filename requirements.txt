@@ -1,6 +1,8 @@
 Django==1.6.2
 PyYAML==3.10
 nltk==2.0.4
+pygame==1.9.2a0
+pytagcloud==0.3.5
 simplejson==3.3.3
 sympy==0.7.4.1
 textblob==0.8.4
