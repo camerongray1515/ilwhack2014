@@ -4,3 +4,15 @@
 local_settings.py
 
 .idea
+
+map/templates/jsl
+
+resources/js/jsl
+
+static_files/img/bg.jpg
+
+static_files/css/stylish-portfolio.css
+
+static_files/img/crags.jpg
+
+static_files/js/filtered.geojson
